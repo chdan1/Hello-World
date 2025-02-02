@@ -1,24 +1,28 @@
 package com.example;
 
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import com.sun.net.httpserver.HttpServer;
 
-@SpringBootApplication 
 public class HelloWorld {
-    public static void main(String[] args) {
-        SpringApplication.run(HelloWorld.class, args);
-    }
-}
-//test 3
-@RestController
-@RequestMapping("/")
-class HelloController {
-    @GetMapping
-    public String hello() {
-        return "Hello, World!";
+    private static final Logger logger = LoggerFactory.getLogger(HelloWorld.class);
+
+    public static void main(String[] args) throws IOException {
+        int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
+        logger.info("Starting server on port: " + port);
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+        server.createContext("/", exchange -> {
+            String response = "Hello, World!";
+            exchange.sendResponseHeaders(200, response.length());
+            exchange.getResponseBody().write(response.getBytes());
+            exchange.close();
+        });
+
+        server.start();
+        logger.info("Server started successfully!");
     }
 }
