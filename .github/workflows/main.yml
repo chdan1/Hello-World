@@ -3,7 +3,7 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - main  # Deploy only when changes are pushed to main branch
+      - main  # Deploy only when changes are pushed to the main branch
 
 jobs:
   build:
@@ -29,11 +29,16 @@ jobs:
       - name: Build the project
         run: mvn clean package -DskipTests
 
+      # ✅ FIX: Install Heroku CLI
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+
       - name: Deploy to Heroku using Git
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: |
-          heroku plugins:install heroku-cli-deploy
+          heroku auth:token
           heroku git:remote -a $HEROKU_APP_NAME
           git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:refs/heads/main -f
