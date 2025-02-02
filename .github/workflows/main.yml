@@ -37,8 +37,8 @@ jobs:
           curl https://cli-assets.heroku.com/install.sh | sh
 
       # ✅ FIX: Convert shallow clone to full clone
-      - name: Convert shallow clone to full clone
-        run: git fetch --unshallow
+      #- name: Convert shallow clone to full clone
+      #  run: git fetch --unshallow
 
       - name: Deploy to Heroku using Git
         env:
