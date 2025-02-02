@@ -13,7 +13,7 @@ public class HelloWorld {
         SpringApplication.run(HelloWorld.class, args);
     }
 }
-//test 2
+//test 3
 @RestController
 @RequestMapping("/")
 class HelloController {
