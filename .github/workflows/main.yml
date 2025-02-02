@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository (Full Clone Fix)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # ✅ This prevents shallow clones
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -33,6 +35,10 @@ jobs:
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
+
+      # ✅ FIX: Convert shallow clone to full clone
+      - name: Convert shallow clone to full clone
+        run: git fetch --unshallow
 
       - name: Deploy to Heroku using Git
         env:
